@@ -7,7 +7,7 @@ const char* base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
 /* Generated using command
 "msfvenom -p windows/x64/messagebox ICON=INFORMATION TEXT="Cybershield 2025!" TITLE="Intro to EDR Evasion" --format c" */
 
-// Base64 decoder used: https://github.com/elzoughby/Base64
+// Base64 decoder used: https://github.com/realapire/base64-encode-decode
 
 PBYTE payload = "/EiB5PD////o0AAAAEFRQVBSUVZIMdJlSItSYD5Ii1IYPkiLUiA+SItyUD5ID7dKSk0xyUgxwKw8YXwCLCBBwckNQQHB4u1SQVE+SItSID6LQjxIAdA+i4CIAAAASIXAdG9IAdBQPotIGD5Ei0AgSQHQ41xI/8k+QYs0iEgB1k0xyUgxwKxBwckNQQHBOOB18T5MA0wkCEU50XXWWD5Ei0AkSQHQZj5BiwxIPkSLQBxJAdA+QYsEiEgB0EFYQVheWVpBWEFZQVpIg+wgQVL/4FhBWVo+SIsS6Un///9dPkiNjTQBAABBukx3Jgf/1UnHwUAAAAA+SI2VDgEAAD5MjYUfAQAASDHJQbpFg1YH/9VIMclBuvC1olb/1UN5YmVyc2hpZWxkIDIwMjUASW50cm8gdG8gRURSIEV2YXNpb24AdXNlcjMyLmRsbAA=";
 
