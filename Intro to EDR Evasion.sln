@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Base64", "Base64\Base64.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "API Hashing", "API Hashing\API Hashing.vcxproj", "{CE5AEB77-F4AE-43A9-9A33-92A1EE1BF079}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IAT Camouflage", "IAT Camouflage\IAT Camouflage.vcxproj", "{D82F2C04-9495-4A87-9F7A-DB4615230927}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -51,6 +53,14 @@ Global
 		{CE5AEB77-F4AE-43A9-9A33-92A1EE1BF079}.Release|x64.Build.0 = Release|x64
 		{CE5AEB77-F4AE-43A9-9A33-92A1EE1BF079}.Release|x86.ActiveCfg = Release|Win32
 		{CE5AEB77-F4AE-43A9-9A33-92A1EE1BF079}.Release|x86.Build.0 = Release|Win32
+		{D82F2C04-9495-4A87-9F7A-DB4615230927}.Debug|x64.ActiveCfg = Debug|x64
+		{D82F2C04-9495-4A87-9F7A-DB4615230927}.Debug|x64.Build.0 = Debug|x64
+		{D82F2C04-9495-4A87-9F7A-DB4615230927}.Debug|x86.ActiveCfg = Debug|Win32
+		{D82F2C04-9495-4A87-9F7A-DB4615230927}.Debug|x86.Build.0 = Debug|Win32
+		{D82F2C04-9495-4A87-9F7A-DB4615230927}.Release|x64.ActiveCfg = Release|x64
+		{D82F2C04-9495-4A87-9F7A-DB4615230927}.Release|x64.Build.0 = Release|x64
+		{D82F2C04-9495-4A87-9F7A-DB4615230927}.Release|x86.ActiveCfg = Release|Win32
+		{D82F2C04-9495-4A87-9F7A-DB4615230927}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
