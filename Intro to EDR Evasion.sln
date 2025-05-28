@@ -5,6 +5,8 @@ VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "String Obfuscation", "String Obfuscation\String Obfuscation.vcxproj", "{704C0879-8ED1-4EDF-84A2-7F7948F2B857}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AES", "AES\AES.vcxproj", "{518A9A13-D9C8-46C4-914C-7515F0EC2EB4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{704C0879-8ED1-4EDF-84A2-7F7948F2B857}.Release|x64.Build.0 = Release|x64
 		{704C0879-8ED1-4EDF-84A2-7F7948F2B857}.Release|x86.ActiveCfg = Release|Win32
 		{704C0879-8ED1-4EDF-84A2-7F7948F2B857}.Release|x86.Build.0 = Release|Win32
+		{518A9A13-D9C8-46C4-914C-7515F0EC2EB4}.Debug|x64.ActiveCfg = Debug|x64
+		{518A9A13-D9C8-46C4-914C-7515F0EC2EB4}.Debug|x64.Build.0 = Debug|x64
+		{518A9A13-D9C8-46C4-914C-7515F0EC2EB4}.Debug|x86.ActiveCfg = Debug|Win32
+		{518A9A13-D9C8-46C4-914C-7515F0EC2EB4}.Debug|x86.Build.0 = Debug|Win32
+		{518A9A13-D9C8-46C4-914C-7515F0EC2EB4}.Release|x64.ActiveCfg = Release|x64
+		{518A9A13-D9C8-46C4-914C-7515F0EC2EB4}.Release|x64.Build.0 = Release|x64
+		{518A9A13-D9C8-46C4-914C-7515F0EC2EB4}.Release|x86.ActiveCfg = Release|Win32
+		{518A9A13-D9C8-46C4-914C-7515F0EC2EB4}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
