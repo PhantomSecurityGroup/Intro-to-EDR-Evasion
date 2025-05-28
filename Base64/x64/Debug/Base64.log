@@ -1,0 +1,3 @@
+﻿  main.c
+C:\Users\miles\Phantom Security\Git Repos\Base64\main.c(53,41): warning C4244: '=': conversion from '__int64' to 'uint32_t', possible loss of data
+  Base64.vcxproj -> C:\Users\miles\Phantom Security\Git Repos\x64\Debug\Base64.exe
