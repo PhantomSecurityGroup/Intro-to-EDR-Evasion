@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{518a9a13-d9c8-46c4-914c-7515f0ec2eb4}</ProjectGuid>
-    <RootNamespace>AES</RootNamespace>
+    <ProjectGuid>{0ea5820c-c7b3-4ab9-924c-54cd7ac7757c}</ProjectGuid>
+    <RootNamespace>Base64</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -128,10 +128,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.c" />
-    <ClCompile Include="tiny_aes.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="tiny_aes.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
