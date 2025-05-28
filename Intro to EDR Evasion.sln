@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34525.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "String Obfuscation", "String Obfuscation\String Obfuscation.vcxproj", "{704C0879-8ED1-4EDF-84A2-7F7948F2B857}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{704C0879-8ED1-4EDF-84A2-7F7948F2B857}.Debug|x64.ActiveCfg = Debug|x64
+		{704C0879-8ED1-4EDF-84A2-7F7948F2B857}.Debug|x64.Build.0 = Debug|x64
+		{704C0879-8ED1-4EDF-84A2-7F7948F2B857}.Debug|x86.ActiveCfg = Debug|Win32
+		{704C0879-8ED1-4EDF-84A2-7F7948F2B857}.Debug|x86.Build.0 = Debug|Win32
+		{704C0879-8ED1-4EDF-84A2-7F7948F2B857}.Release|x64.ActiveCfg = Release|x64
+		{704C0879-8ED1-4EDF-84A2-7F7948F2B857}.Release|x64.Build.0 = Release|x64
+		{704C0879-8ED1-4EDF-84A2-7F7948F2B857}.Release|x86.ActiveCfg = Release|Win32
+		{704C0879-8ED1-4EDF-84A2-7F7948F2B857}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {436842EE-2DE5-4686-A22C-40CDF3C7BDDC}
+	EndGlobalSection
+EndGlobal
