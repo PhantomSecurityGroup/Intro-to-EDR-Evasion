@@ -1,0 +1,7 @@
+﻿  main.c
+C:\Users\miles\Phantom Security\Git Repos\API Hashing\main.c(76,23): warning C4047: '==': 'DWORD' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\API Hashing\main.c(86,32): warning C4047: '!=': 'int' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\API Hashing\main.c(115,39): warning C4047: '==': 'DWORD' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\API Hashing\main.c(165,17): warning C4113: 'FARPROC' differs in parameter lists from 'fnVirtualAlloc'
+C:\Users\miles\Phantom Security\Git Repos\API Hashing\main.c(165,17): warning C4047: 'initializing': 'fnVirtualAlloc' differs in levels of indirection from 'FARPROC'
+  API Hashing.vcxproj -> C:\Users\miles\Phantom Security\Git Repos\x64\Debug\API Hashing.exe
