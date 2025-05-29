@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IAT Camouflage", "IAT Camou
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sandbox Evasion", "Sandbox Evasion\Sandbox Evasion.vcxproj", "{38ADB001-7F24-400E-B502-2085436EA06C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Direct Syscalls", "Direct Syscalls\Direct Syscalls.vcxproj", "{E78370C3-9CCA-463A-8CA2-ECA5F4B81D22}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -71,6 +73,14 @@ Global
 		{38ADB001-7F24-400E-B502-2085436EA06C}.Release|x64.Build.0 = Release|x64
 		{38ADB001-7F24-400E-B502-2085436EA06C}.Release|x86.ActiveCfg = Release|Win32
 		{38ADB001-7F24-400E-B502-2085436EA06C}.Release|x86.Build.0 = Release|Win32
+		{E78370C3-9CCA-463A-8CA2-ECA5F4B81D22}.Debug|x64.ActiveCfg = Debug|x64
+		{E78370C3-9CCA-463A-8CA2-ECA5F4B81D22}.Debug|x64.Build.0 = Debug|x64
+		{E78370C3-9CCA-463A-8CA2-ECA5F4B81D22}.Debug|x86.ActiveCfg = Debug|Win32
+		{E78370C3-9CCA-463A-8CA2-ECA5F4B81D22}.Debug|x86.Build.0 = Debug|Win32
+		{E78370C3-9CCA-463A-8CA2-ECA5F4B81D22}.Release|x64.ActiveCfg = Release|x64
+		{E78370C3-9CCA-463A-8CA2-ECA5F4B81D22}.Release|x64.Build.0 = Release|x64
+		{E78370C3-9CCA-463A-8CA2-ECA5F4B81D22}.Release|x86.ActiveCfg = Release|Win32
+		{E78370C3-9CCA-463A-8CA2-ECA5F4B81D22}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

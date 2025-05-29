@@ -2,48 +2,43 @@
 C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\redefined_crt_functions.h(3,23): warning C4028: formal parameter 1 different from declaration
   (compiling source file 'main.c')
   
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\redefined_crt_functions.h(3,5): warning C4273: 'toupper': inconsistent dll linkage
-  (compiling source file 'main.c')
-  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\ctype.h(63,56):
-  see previous definition of 'toupper'
-  
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(90,18): warning C4047: '==': 'DWORD' differs in levels of indirection from 'void *'
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(100,31): warning C4047: '!=': 'int' differs in levels of indirection from 'void *'
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(106,62): warning C4047: 'function': 'char *' differs in levels of indirection from 'WCHAR'
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(106,62): warning C4024: 'toupper': different types for formal and actual parameter 1
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(129,36): warning C4047: '==': 'DWORD' differs in levels of indirection from 'void *'
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(223,50): warning C4307: '*': signed integral constant overflow
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(231,88): warning C4047: 'function': 'DWORD' differs in levels of indirection from 'void *'
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(231,88): warning C4024: 'RegOpenKeyExA': different types for formal and actual parameter 3
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(299,54): warning C4047: 'function': 'UINT' differs in levels of indirection from 'void *'
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(299,54): warning C4024: 'MessageBoxA': different types for formal and actual parameter 4
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(301,27): warning C4047: 'function': 'UINT' differs in levels of indirection from 'void *'
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(301,27): warning C4024: 'MultiByteToWideChar': different types for formal and actual parameter 1
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(301,33): warning C4047: 'function': 'DWORD' differs in levels of indirection from 'void *'
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(301,33): warning C4024: 'MultiByteToWideChar': different types for formal and actual parameter 2
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(301,45): warning C4047: 'function': 'int' differs in levels of indirection from 'void *'
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(301,45): warning C4024: 'MultiByteToWideChar': different types for formal and actual parameter 4
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(301,57): warning C4047: 'function': 'int' differs in levels of indirection from 'void *'
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(301,57): warning C4024: 'MultiByteToWideChar': different types for formal and actual parameter 6
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(305,28): warning C4047: 'function': 'LCID' differs in levels of indirection from 'void *'
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(305,28): warning C4024: 'ConvertDefaultLocale': different types for formal and actual parameter 1
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(306,31): warning C4047: 'function': 'int' differs in levels of indirection from 'void *'
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(306,31): warning C4024: 'GetWindowLongPtrW': different types for formal and actual parameter 2
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(307,41): warning C4047: 'function': 'DWORD' differs in levels of indirection from 'void *'
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(307,41): warning C4024: 'SetCriticalSectionSpinCount': different types for formal and actual parameter 2
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(208,19): warning C4113: 'FARPROC' differs in parameter lists from 'fnGetSystemInfo'
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(209,26): warning C4113: 'FARPROC' differs in parameter lists from 'fnGlobalMemoryStatusEx'
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(210,19): warning C4113: 'FARPROC' differs in parameter lists from 'fnRegOpenKeyExA'
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(210,19): warning C4133: 'initializing': incompatible types - from 'FARPROC' to 'fnRegOpenKeyExA'
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(211,22): warning C4113: 'FARPROC' differs in parameter lists from 'fnRegQueryInfoKeyA'
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(211,22): warning C4133: 'initializing': incompatible types - from 'FARPROC' to 'fnRegQueryInfoKeyA'
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(228,9): warning C4047: 'initializing': 'DWORD' differs in levels of indirection from 'void *'
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(230,9): warning C4047: 'initializing': 'DWORD' differs in levels of indirection from 'void *'
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(267,17): warning C4113: 'FARPROC' differs in parameter lists from 'fnVirtualAlloc'
-C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(267,17): warning C4047: 'initializing': 'fnVirtualAlloc' differs in levels of indirection from 'FARPROC'
-  Generating code
-  1 of 18 functions ( 5.6%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
-  Finished generating code
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(143,18): warning C4047: '==': 'DWORD' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(153,31): warning C4047: '!=': 'int' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(159,62): warning C4047: 'function': 'char *' differs in levels of indirection from 'WCHAR'
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(159,62): warning C4024: 'toupper': different types for formal and actual parameter 1
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(182,36): warning C4047: '==': 'DWORD' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(284,50): warning C4307: '*': signed integral constant overflow
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(292,88): warning C4047: 'function': 'DWORD' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(292,88): warning C4024: 'RegOpenKeyExA': different types for formal and actual parameter 3
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(353,54): warning C4047: 'function': 'UINT' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(353,54): warning C4024: 'MessageBoxA': different types for formal and actual parameter 4
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(355,27): warning C4047: 'function': 'UINT' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(355,27): warning C4024: 'MultiByteToWideChar': different types for formal and actual parameter 1
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(355,33): warning C4047: 'function': 'DWORD' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(355,33): warning C4024: 'MultiByteToWideChar': different types for formal and actual parameter 2
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(355,45): warning C4047: 'function': 'int' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(355,45): warning C4024: 'MultiByteToWideChar': different types for formal and actual parameter 4
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(355,57): warning C4047: 'function': 'int' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(355,57): warning C4024: 'MultiByteToWideChar': different types for formal and actual parameter 6
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(359,28): warning C4047: 'function': 'LCID' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(359,28): warning C4024: 'ConvertDefaultLocale': different types for formal and actual parameter 1
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(360,31): warning C4047: 'function': 'int' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(360,31): warning C4024: 'GetWindowLongPtrW': different types for formal and actual parameter 2
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(361,41): warning C4047: 'function': 'DWORD' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(361,41): warning C4024: 'SetCriticalSectionSpinCount': different types for formal and actual parameter 2
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(266,19): warning C4113: 'FARPROC' differs in parameter lists from 'fnGetSystemInfo'
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(267,26): warning C4113: 'FARPROC' differs in parameter lists from 'fnGlobalMemoryStatusEx'
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(268,19): warning C4113: 'FARPROC' differs in parameter lists from 'fnRegOpenKeyExA'
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(268,19): warning C4133: 'initializing': incompatible types - from 'FARPROC' to 'fnRegOpenKeyExA'
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(269,22): warning C4113: 'FARPROC' differs in parameter lists from 'fnRegQueryInfoKeyA'
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(269,22): warning C4133: 'initializing': incompatible types - from 'FARPROC' to 'fnRegQueryInfoKeyA'
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(289,9): warning C4047: 'initializing': 'DWORD' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(291,9): warning C4047: 'initializing': 'DWORD' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(321,17): warning C4113: 'FARPROC' differs in parameter lists from 'fnVirtualAlloc'
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\main.c(321,17): warning C4047: 'initializing': 'fnVirtualAlloc' differs in levels of indirection from 'FARPROC'
+  redefined_crt_functions.c
+C:\Users\miles\Phantom Security\Git Repos\Sandbox Evasion\redefined_crt_functions.c(3,17): warning C4028: formal parameter 1 different from declaration
+  tiny_aes.c
+  Generating Code...
+  LINK : /LTCG specified but no code generation required; remove /LTCG from the link command line to improve linker performance
   Sandbox Evasion.vcxproj -> C:\Users\miles\Phantom Security\Git Repos\x64\Release\Sandbox Evasion.exe

