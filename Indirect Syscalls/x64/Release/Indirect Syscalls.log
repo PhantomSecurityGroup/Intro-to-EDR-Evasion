@@ -1,0 +1,43 @@
+﻿  main.c
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\redefined_crt_functions.h(3,23): warning C4028: formal parameter 1 different from declaration
+  (compiling source file 'main.c')
+  
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(143,18): warning C4047: '==': 'DWORD' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(153,31): warning C4047: '!=': 'int' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(159,62): warning C4047: 'function': 'char *' differs in levels of indirection from 'WCHAR'
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(159,62): warning C4024: 'toupper': different types for formal and actual parameter 1
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(182,36): warning C4047: '==': 'DWORD' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(285,50): warning C4307: '*': signed integral constant overflow
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(293,88): warning C4047: 'function': 'DWORD' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(293,88): warning C4024: 'RegOpenKeyExA': different types for formal and actual parameter 3
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(325,61): warning C4047: 'function': 'ULONG' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(325,61): warning C4024: 'Sw3NtAllocateVirtualMemory': different types for formal and actual parameter 3
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(353,54): warning C4047: 'function': 'UINT' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(353,54): warning C4024: 'MessageBoxA': different types for formal and actual parameter 4
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(355,27): warning C4047: 'function': 'UINT' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(355,27): warning C4024: 'MultiByteToWideChar': different types for formal and actual parameter 1
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(355,33): warning C4047: 'function': 'DWORD' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(355,33): warning C4024: 'MultiByteToWideChar': different types for formal and actual parameter 2
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(355,45): warning C4047: 'function': 'int' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(355,45): warning C4024: 'MultiByteToWideChar': different types for formal and actual parameter 4
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(355,57): warning C4047: 'function': 'int' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(355,57): warning C4024: 'MultiByteToWideChar': different types for formal and actual parameter 6
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(359,28): warning C4047: 'function': 'LCID' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(359,28): warning C4024: 'ConvertDefaultLocale': different types for formal and actual parameter 1
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(360,31): warning C4047: 'function': 'int' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(360,31): warning C4024: 'GetWindowLongPtrW': different types for formal and actual parameter 2
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(361,41): warning C4047: 'function': 'DWORD' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(361,41): warning C4024: 'SetCriticalSectionSpinCount': different types for formal and actual parameter 2
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(267,19): warning C4113: 'FARPROC' differs in parameter lists from 'fnGetSystemInfo'
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(268,26): warning C4113: 'FARPROC' differs in parameter lists from 'fnGlobalMemoryStatusEx'
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(269,19): warning C4113: 'FARPROC' differs in parameter lists from 'fnRegOpenKeyExA'
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(269,19): warning C4133: 'initializing': incompatible types - from 'FARPROC' to 'fnRegOpenKeyExA'
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(270,22): warning C4113: 'FARPROC' differs in parameter lists from 'fnRegQueryInfoKeyA'
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(270,22): warning C4133: 'initializing': incompatible types - from 'FARPROC' to 'fnRegQueryInfoKeyA'
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(290,9): warning C4047: 'initializing': 'DWORD' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(292,9): warning C4047: 'initializing': 'DWORD' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\Indirect Syscalls\main.c(335,8): warning C4047: 'initializing': 'DWORD' differs in levels of indirection from 'void *'
+  syscalls.c
+  Generating Code...
+  LINK : /LTCG specified but no code generation required; remove /LTCG from the link command line to improve linker performance
+  Indirect Syscalls.vcxproj -> C:\Users\miles\Phantom Security\Git Repos\x64\Release\Indirect Syscalls.exe
