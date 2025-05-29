@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "API Hashing", "API Hashing\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IAT Camouflage", "IAT Camouflage\IAT Camouflage.vcxproj", "{D82F2C04-9495-4A87-9F7A-DB4615230927}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sandbox Evasion", "Sandbox Evasion\Sandbox Evasion.vcxproj", "{38ADB001-7F24-400E-B502-2085436EA06C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -61,6 +63,14 @@ Global
 		{D82F2C04-9495-4A87-9F7A-DB4615230927}.Release|x64.Build.0 = Release|x64
 		{D82F2C04-9495-4A87-9F7A-DB4615230927}.Release|x86.ActiveCfg = Release|Win32
 		{D82F2C04-9495-4A87-9F7A-DB4615230927}.Release|x86.Build.0 = Release|Win32
+		{38ADB001-7F24-400E-B502-2085436EA06C}.Debug|x64.ActiveCfg = Debug|x64
+		{38ADB001-7F24-400E-B502-2085436EA06C}.Debug|x64.Build.0 = Debug|x64
+		{38ADB001-7F24-400E-B502-2085436EA06C}.Debug|x86.ActiveCfg = Debug|Win32
+		{38ADB001-7F24-400E-B502-2085436EA06C}.Debug|x86.Build.0 = Debug|Win32
+		{38ADB001-7F24-400E-B502-2085436EA06C}.Release|x64.ActiveCfg = Release|x64
+		{38ADB001-7F24-400E-B502-2085436EA06C}.Release|x64.Build.0 = Release|x64
+		{38ADB001-7F24-400E-B502-2085436EA06C}.Release|x86.ActiveCfg = Release|Win32
+		{38ADB001-7F24-400E-B502-2085436EA06C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

