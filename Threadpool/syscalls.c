@@ -14,14 +14,14 @@ EXTERN_C PVOID internal_cleancall_wow64_gate(VOID) {
 __declspec(naked) BOOL local_is_wow64(void)
 {
     __asm {
-        mov eax, fs:[0xc0]
+        mov eax, fs: [0xc0]
         test eax, eax
         jne wow64
         mov eax, 0
         ret
-        wow64:
+        wow64 :
         mov eax, 1
-        ret
+            retran
     }
 }
 
@@ -64,26 +64,26 @@ PVOID SC_Address(PVOID NtApiAddress)
     DWORD searchLimit = 512;
     PVOID SyscallAddress;
 
-   #ifdef _WIN64
+#ifdef _WIN64
     // If the process is 64-bit on a 64-bit OS, we need to search for syscall
     BYTE syscall_code[] = { 0x0f, 0x05, 0xc3 };
     ULONG distance_to_syscall = 0x12;
-   #else
+#else
     // If the process is 32-bit on a 32-bit OS, we need to search for sysenter
     BYTE syscall_code[] = { 0x0f, 0x34, 0xc3 };
     ULONG distance_to_syscall = 0x0f;
-   #endif
+#endif
 
-  #ifdef _M_IX86
+#ifdef _M_IX86
     // If the process is 32-bit on a 64-bit OS, we need to jump to WOW32Reserved
     if (local_is_wow64())
     {
-    #ifdef DEBUG
+#ifdef DEBUG
         printf("[+] Running 32-bit app on x64 (WOW64)\n");
-    #endif
+#endif
         return NULL;
     }
-  #endif
+#endif
 
     // we don't really care if there is a 'jmp' between
     // NtApiAddress and the 'syscall; ret' instructions
@@ -92,9 +92,9 @@ PVOID SC_Address(PVOID NtApiAddress)
     if (!memcmp((PVOID)syscall_code, SyscallAddress, sizeof(syscall_code)))
     {
         // we can use the original code for this system call :)
-        #if defined(DEBUG)
-            printf("Found Syscall Opcodes at address 0x%p\n", SyscallAddress);
-        #endif
+#if defined(DEBUG)
+        printf("Found Syscall Opcodes at address 0x%p\n", SyscallAddress);
+#endif
         return SyscallAddress;
     }
 
@@ -110,9 +110,9 @@ PVOID SC_Address(PVOID NtApiAddress)
             distance_to_syscall + num_jumps * 0x20);
         if (!memcmp((PVOID)syscall_code, SyscallAddress, sizeof(syscall_code)))
         {
-        #if defined(DEBUG)
+#if defined(DEBUG)
             printf("Found Syscall Opcodes at address 0x%p\n", SyscallAddress);
-        #endif
+#endif
             return SyscallAddress;
         }
 
@@ -123,9 +123,9 @@ PVOID SC_Address(PVOID NtApiAddress)
             distance_to_syscall - num_jumps * 0x20);
         if (!memcmp((PVOID)syscall_code, SyscallAddress, sizeof(syscall_code)))
         {
-        #if defined(DEBUG)
+#if defined(DEBUG)
             printf("Found Syscall Opcodes at address 0x%p\n", SyscallAddress);
-        #endif
+#endif
             return SyscallAddress;
         }
     }
@@ -144,11 +144,11 @@ BOOL SW3_PopulateSyscallList()
     // Return early if the list is already populated.
     if (SW3_SyscallList.Count) return TRUE;
 
-    #ifdef _WIN64
+#ifdef _WIN64
     PSW3_PEB Peb = (PSW3_PEB)__readgsqword(0x60);
-    #else
+#else
     PSW3_PEB Peb = (PSW3_PEB)__readfsdword(0x30);
-    #endif
+#endif
     PSW3_PEB_LDR_DATA Ldr = Peb->Ldr;
     PIMAGE_EXPORT_DIRECTORY ExportDirectory = NULL;
     PVOID DllBase = NULL;
@@ -268,11 +268,11 @@ EXTERN_C PVOID SW3_GetRandomSyscallAddress(DWORD FunctionHash)
     // Ensure SW3_SyscallList is populated.
     if (!SW3_PopulateSyscallList()) return NULL;
 
-    DWORD index = ((DWORD) rand) % SW3_SyscallList.Count;
+    DWORD index = ((DWORD)rand()) % SW3_SyscallList.Count;
 
-    while (FunctionHash == SW3_SyscallList.Entries[index].Hash){
+    while (FunctionHash == SW3_SyscallList.Entries[index].Hash) {
         // Spoofing the syscall return address
-        index = ((DWORD) rand) % SW3_SyscallList.Count;
+        index = ((DWORD)rand()) % SW3_SyscallList.Count;
     }
     return SW3_SyscallList.Entries[index].SyscallAddress;
 }

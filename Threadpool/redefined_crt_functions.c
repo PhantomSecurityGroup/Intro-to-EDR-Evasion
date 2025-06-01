@@ -4,9 +4,9 @@ static unsigned int seed = 0;
 
 int toupper(int ch)
 {
-	if (ch >= 'a' && ch <= 'z')
-		ch -= 32;
-	return ch;
+    if (ch >= 'a' && ch <= 'z')
+        ch -= 32;
+    return ch;
 }
 
 int compile_time_seed(void)
