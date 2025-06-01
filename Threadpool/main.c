@@ -234,7 +234,6 @@ FARPROC get_proc_address_hash(HMODULE module, DWORD hashed_name) {
 		}
 	}
 
-	MessageBoxA(NULL, "failed to get func from hash", "gurt", MB_ICONERROR);
 	return NULL;
 }
 
