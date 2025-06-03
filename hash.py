@@ -22,7 +22,7 @@ def hash_a(data: bytes, initial_seed: int = 7):
     return hash_val
 
 if __name__ == "__main__":
-    input_str = "VirtualProtect"
+    input_str = "EnumDisplayMonitors"
     input_bytes = input_str.encode('ascii') 
     result = hash_a(input_bytes)
     print(f"#define {input_str}_HASH 0x{result:08X}")
